@@ -78,10 +78,10 @@ app.post('/modify',function (request, response){
 		response.send(error_response);
 	}
 })
-var port = process.env.PORT || 3000 var server = app.listen(port, 
+#var port = process.env.PORT || 3000 var server = app.listen(port, 
 function () {
    var host = server.address().address
-   var port = port
+   var port = 8000
    
    console.log("Example app listening at http://%s:%s", host, port)
 })
