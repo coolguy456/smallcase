@@ -1,0 +1,27 @@
+{
+  "name": "smallcase",
+  "version": "1.0.0",
+  "description": "",
+  "main": "routes.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dateformat": "^3.0.3",
+    "deepcopy": "^0.6.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.0.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node routes.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolguy456/smallcase.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coolguy456/smallcase/issues"
+  },
+  "homepage": "https://github.com/coolguy456/smallcase#readme"
+}
