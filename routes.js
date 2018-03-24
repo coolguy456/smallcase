@@ -1,12 +1,9 @@
-var express = require('express');
-var app = express();
-var controllers = require('./controllers.js');
-var body_parser = require('body-parser');
-var request_parser = body_parser.urlencoded({extended:false});
-app.use(body_parser.json());
-var error_response = {"error": true, "message": "your request cannot be satisfied"};
-
-app.get('/retreive', function (request, response){
+var express = require('express'); var app = express(); var controllers = 
+require('./controllers.js'); var body_parser = require('body-parser'); 
+var request_parser = body_parser.urlencoded({extended:false}); 
+app.use(body_parser.json()); var error_response = {"error": true, 
+"message": "your request cannot be satisfied"}; app.get('/retreive', 
+function (request, response){
 	try{
 		user_id = request.query['user_id'];
 		if(user_id == undefined){
@@ -23,7 +20,6 @@ app.get('/retreive', function (request, response){
 		response.send(error_response);
 	}
 })
-
 app.post('/add',function (request, response){
 	try{
 		data = request.body;
@@ -42,7 +38,6 @@ app.post('/add',function (request, response){
 		response.send(error_response);
 	}
 })
-
 app.post('/delete',function (request, response){
 	try{
 		data = request.body;
@@ -61,7 +56,6 @@ app.post('/delete',function (request, response){
 		response.send(error_response);
 	}
 })
-
 app.post('/modify',function (request, response){
 	try{
 		data = request.body;
@@ -72,7 +66,7 @@ app.post('/modify',function (request, response){
 		var modify_result = controllers.modify(data);
 		modify_result.then(function(result){
 			console.log(result);console.log("[[[[[[[[[[[[[[[[[[[");
-			response.send(result);	
+			response.send(result);
 		},function(error){
 			console.log(error);console.log("]]]]]]]]]]]]]]]]");
 			response.send(error_response);
@@ -84,10 +78,10 @@ app.post('/modify',function (request, response){
 		response.send(error_response);
 	}
 })
-
-var server = app.listen(8000, function () {
+var port = process.env.PORT || 3000 var server = app.listen(port, 
+function () {
    var host = server.address().address
-   var port = server.address().port
+   var port = port
    
    console.log("Example app listening at http://%s:%s", host, port)
 })
