@@ -13,31 +13,56 @@ exports.retreive = function(input) {
 			// console.log(buy_transactions_portfolio);
 			all_transactions = [];
 			for(var i=0;i < buy_transactions_portfolio.length;i++){
-			var temp = {};
-			temp['transaction_type'] = 'buy';
-			temp['user_id'] = buy_transactions_portfolio[i]['user_id'];
-			temp['volume'] = buy_transactions_portfolio[i]['volume'];
-			temp['stock_id'] = buy_transactions_portfolio[i]['stock_id'];
-			temp['total_cost'] = buy_transactions_portfolio[i]['total_cost'];
-			temp['date'] = buy_transactions_portfolio[i]['date'];
-			// console.log(temp);
-			portfolio.push(temp);}
+				var temp = {};
+				temp['transaction_type'] = 'buy';
+				temp['user_id'] = buy_transactions_portfolio[i]['user_id'];
+				temp['volume'] = buy_transactions_portfolio[i]['volume'];
+				temp['stock_id'] = buy_transactions_portfolio[i]['stock_id'];
+				temp['total_cost'] = buy_transactions_portfolio[i]['total_cost'];
+				temp['date'] = buy_transactions_portfolio[i]['date'];
+				// console.log(temp);
+				portfolio.push(temp);
+			}
+
 			for(var i=0;i < sell_transactions_portfolio.length;i++){
-			var temp = {};
-			temp['transaction_type'] = 'sell';
-			temp['user_id'] = sell_transactions_portfolio[i]['user_id'];
-			temp['volume'] = sell_transactions_portfolio[i]['volume'];
-			temp['stock_id'] = sell_transactions_portfolio[i]['stock_id'];
-			temp['total_cost'] = sell_transactions_portfolio[i]['total_cost'];
-			temp['date'] = sell_transactions_portfolio[i]['date'];
-			// console.log(temp);
-			portfolio.push(temp);}
-			// portfolio = buy_transactions_portfolio.concat(sell_transactions_portfolio);
-			// console.log(portfolio);
+				var temp = {};
+				temp['transaction_type'] = 'sell';
+				temp['user_id'] = sell_transactions_portfolio[i]['user_id'];
+				temp['volume'] = sell_transactions_portfolio[i]['volume'];
+				temp['stock_id'] = sell_transactions_portfolio[i]['stock_id'];
+				temp['total_cost'] = sell_transactions_portfolio[i]['total_cost'];
+				temp['date'] = sell_transactions_portfolio[i]['date'];
+				// console.log(temp);
+				portfolio.push(temp);
+			}
 			resolve(portfolio);
 		}).catch(error => {reject(error);});
 	});
 }
+
+exports.retreive_step_two = function(input){
+	var promises = [];
+	console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+	console.log(input);
+	for(var i = 0;i < input.length;i++){
+		// var iii = input[i]['stock_id'];
+		// console.log(iii);
+		promises.push(model_controllers.retreive_company_by_id(input[i]['stock_id']));
+	}
+	
+	return new Promise(function(resolve,reject){console.log(promises);
+		Promise.all(promises).then(results => {console.log("hhhhhhhhhhhhhhhhhhhh");
+			console.log(results);
+			// final_results = [];
+			for(var i = 0;i < input.length;i++){
+				input[i]['company'] = results[i][0]['company'];
+			}
+			console.log(input);
+			resolve(input);
+		}).catch(error => {reject(error);});
+	});
+}
+
 
 exports.add = function(input){
 	console.log(input['transaction_type']);

@@ -1,39 +1,6 @@
 var mongoose = require('mongoose');
 var collections = require('./models.js');
 
-// exports.retreive_buy_transactions_by_user_id(user_id){
-// exports.retreive_buy_transaction_by_id = function(trade_id){
-	
-// 	return new Promise(function(resolve, reject){
-
-// 		collections.buy_transactions.find({'_id' : mongoose.Types.ObjectId(trade_id)}, function (error,response) {
-
-// 			if(error){
-// 				reject(error);
-// 			}
-// 			else{
-// 				resolve(response);
-// 			}
-// 		});
-// 	})	
-// }
-
-// exports.retreive_sell_transaction_by_id = function(trade_id){
-	
-// 	return new Promise(function(resolve, reject){
-
-// 		collections.sell_transactions.find({'_id' : mongoose.Types.ObjectId(trade_id)}, function (error,response) {
-
-// 			if(error){
-// 				reject(error);
-// 			}
-// 			else{
-// 				resolve(response);
-// 			}
-// 		});
-// 	})	
-// }
-
 exports.retreive_buy_transactions_by_user_id = function(user_id) {
 
 	return new Promise(function(resolve, reject){
@@ -50,9 +17,6 @@ exports.retreive_buy_transactions_by_user_id = function(user_id) {
 	})
 }
 
-// exports.retreive_sell_transactions_by_user_id(user_id) {
-	
-// }
 
 exports.retreive_sell_transactions_by_user_id = function(user_id) {
 
@@ -173,19 +137,20 @@ exports.modify_sell_transaction = function(data) {
 	});
 }
 
-// exports.retreive_company_by_id = function(_id) {
+exports.retreive_company_by_id = function(_id) {
 
-// 	return new Promise(function(resolve, reject){
+	return new Promise(function(resolve, reject){
 
-// 		collections.stocks.find({'_id' : mongoose.Types.ObjectId(_id)}, function (error,response) {
+		collections.stocks.find({'_id' : mongoose.Types.ObjectId(_id)}, function (error,response) {
 
-// 			if(error){
-// 				reject(error);
-// 			}
-// 			else{
-// 				resolve(response);
-// 			}
-// 		});
-// 	})
-// }
+			if(error){
+				reject(error);
+			}
+			else{
+				resolve(response);
+			}
+		});
+	})
+}
+
 // retreive_sell_transactions_by_user_id(1000);
