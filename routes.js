@@ -6,7 +6,7 @@ var request_parser = body_parser.urlencoded({extended:false});
 app.use(body_parser.json());
 var error_response = {"error": true, "message": "your request cannot be satisfied"};
 
-app.get('/retreive', function (request, response){
+app.get('/portfolio/retreive', function (request, response){
 	try{
 		user_id = request.query['user_id'];
 		if(user_id == undefined){
@@ -24,7 +24,7 @@ app.get('/retreive', function (request, response){
 	}
 })
 
-app.post('/add',function (request, response){
+app.post('/portfolio/add',function (request, response){
 	try{
 		data = request.body;
 		if(data == undefined){
@@ -43,7 +43,7 @@ app.post('/add',function (request, response){
 	}
 })
 
-app.post('/delete',function (request, response){
+app.post('/portfolio/delete',function (request, response){
 	try{
 		data = request.body;
 		if(data == undefined){
@@ -62,7 +62,7 @@ app.post('/delete',function (request, response){
 	}
 })
 
-app.post('/modify',function (request, response){
+app.post('/portfolio/modify',function (request, response){
 	try{
 		data = request.body;
 		// console.log(data);
@@ -84,6 +84,42 @@ app.post('/modify',function (request, response){
 		response.send(error_response);
 	}
 })
+
+app.post('/portfolio/holdings',function(request,response){
+	try{
+		data = request.body;
+		user_id = data['user_id'];
+		var holdings_result = controllers.get_holdings_by_user_id(user_id);
+		holdings_result.then(function(result){
+			console.log(result);
+			return controllers.get_holdings_by_user_id_part_two(result);
+		},function(error){
+			console.log(error);
+			response.send(error_response);
+		}).then(function(result){
+			console.log(result);
+			response.send(result);
+		},function(error){
+			console.log(error);response.send(error_response);
+		});
+	}
+	catch(exception){
+		response.send(error_response);
+	}
+})
+
+app.post('/portfolio/cummulative_returns',function(request,response){
+	try{
+		data = request.body;
+		user_id = data['user_id'];
+		var cummulative_returns_result = controllers.get_cummulative_returns_by_user_id(user_id);
+		cummulative_returns_result.then(function(result){response.send(result);},function(error){console.log(error);response.send(error_response);});
+	}
+	catch(exception){
+		response.send(error_response);
+	}
+})
+
 // var port = process.env.PORT || 3000
 var server = app.listen(8000, function () {
    var host = server.address().address

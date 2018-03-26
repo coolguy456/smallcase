@@ -153,4 +153,93 @@ exports.retreive_company_by_id = function(_id) {
 	})
 }
 
+exports.cummulative_returns_buy_transactions_by_user_id = function(_id) {
+	return new Promise(function(resolve,reject){
+		collections.buy_transactions.aggregate([
+			{
+				$match: { "user_id": _id }
+			},
+			{
+				$group: { _id: "$stock_id", cummulative: {$sum:{$multiply:[{$divide:[{$subtract:[100,"$total_cost"]},"$total_cost"]},"$volume"]}}}
+			},
+			{
+				$project: { _id: 1, cummulative: 1}
+			}
+		],function(error,response){
+			if(error){
+				reject(error);
+			}
+			else{
+				resolve(response);
+			}
+		});
+	});
+}
+
+// exports.cummulative_returns_sell_transactions_by_user_id = function(_id) {
+// 	return new Promise(function(resolve,reject){
+// 		collections.sell_transactions.aggregate([
+// 			{
+// 				$match: { "user_id": _id }
+// 			},
+// 			{
+// 				$group: { _id: "$stock_id", sell_price: { $sum: volume} }
+// 			}
+// 		],function(error,response){
+// 			if(error){
+// 				reject(error);
+// 			}
+// 			else{
+// 				resolve(response);
+// 			}
+// 		});
+// 	});
+// }
+
+exports.holdings_buy_transactions_by_user_id = function(_id) {
+	return new Promise(function(resolve,reject){
+		collections.buy_transactions.aggregate([
+			{
+				$match: { "user_id": _id }
+			},
+			{
+				$group: { _id: "$stock_id", buy_price: { $sum: {$multiply: ["$volume","$total_cost"]}}, stock_count: { $sum: "$volume" } }
+			},
+			{
+				$addFields: { holdings: {$divide:["$buy_price","$stock_count"]}}
+			},
+			{
+				$project: {holdings:1,_id:1,stock_count:1}
+			}
+		],function(error,response){
+			if(error){
+				reject(error);
+			}
+			else{
+				resolve(response);
+			}
+		});
+	});
+}
+
+exports.holdings_sell_transactions_by_user_id = function(_id) {
+	return new Promise(function(resolve,reject){
+		collections.sell_transactions.aggregate([
+			{
+				$match: { "user_id": _id }
+			},
+			{
+				$group: { _id: "$stock_id", stock_count: { $sum: "$volume" } }
+			}
+		],function(error,response){
+			if(error){
+				reject(error);
+			}
+			else{
+				resolve(response);
+			}
+		});
+	});
+}
 // retreive_sell_transactions_by_user_id(1000);
+// exports.cummulative_returns_buy_transactions_by_user_id()

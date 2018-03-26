@@ -195,3 +195,59 @@ exports.modify = function(input){
 		return Promise.reject();
 	}
 }
+
+exports.get_holdings_by_user_id = function(input){
+	buy_holdings = model_controllers.holdings_buy_transactions_by_user_id(input);
+	sell_holdings = model_controllers.holdings_sell_transactions_by_user_id(input);
+	return new Promise(function(resolve,reject){
+		Promise.all([buy_holdings,sell_holdings]).then(results => {
+			console.log(results);
+			var id_dict = {}
+			for(var i = 0;i < results[0].length;i++){
+				id_dict[results[0][i]['_id']] = {};
+				id_dict[results[0][i]['_id']]['stock_count'] = results[0][i]['stock_count'];
+				id_dict[results[0][i]['_id']]['holdings'] = results[0][i]['holdings'];
+			}
+			for(var i = 0;i < results[1].length;i++){
+				id_dict[results[1][i]['_id']]['stock_count'] -= results[1][i]['stock_count'];
+			}
+			resolve(id_dict);
+		}).catch(error => {reject(error);})});
+}
+
+exports.get_holdings_by_user_id_part_two = function(input){
+	var promises = [];
+	var keys = [];
+	output = [];
+	console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+	console.log(input);
+	for(var k in input){
+		// var iii = input[i]['stock_id'];
+		// console.log(iii);
+		keys.push(k);
+		promises.push(model_controllers.retreive_company_by_id(k));
+	}
+	
+	return new Promise(function(resolve,reject){console.log(promises);
+		Promise.all(promises).then(results => {console.log("hhhhhhhhhhhhhhhhhhhh");
+			console.log(results);
+			// final_results = [];
+			for(var i = 0;i < keys.length;i++){
+				var temp = {};
+				temp['company'] = results[i][0]['company'];
+				temp['stock_count'] = input[keys[i]]['stock_count'];
+				temp['holdings'] = input[keys[i]]['holdings'];
+				output.push(temp);
+			}
+			console.log(output);
+			resolve(output);
+		}).catch(error => {reject(error);});
+	});
+}
+
+exports.get_cummulative_returns_by_user_id = function(input){
+	var cummulative_returns = model_controllers.cummulative_returns_buy_transactions_by_user_id(input);
+	return new Promise(function(resolve,reject){
+		cummulative_returns.then(function(result){console.log(result);resolve(result);},function(error){reject(error);});
+	});
+}
